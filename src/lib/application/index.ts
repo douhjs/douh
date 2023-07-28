@@ -1,13 +1,17 @@
 import * as http from 'http';
 
+// supply async await next() function
+export type NextFunction = () => Promise<any>;
+type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
+
 export default class Application {
-  private middleware: ((..._: any) => any)[];
+  private middleware: Middleware[];
 
   constructor() {
     this.middleware = [];
   }
 
-  use(fn: (..._: any) => any) {
+  use(fn: Middleware) {
     this.middleware.push(fn);
     return this;
   }
@@ -18,7 +22,7 @@ export default class Application {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private compose(middleware: typeof this.middleware) {
+  private compose(middleware: Middleware[]) {
     return (req: http.IncomingMessage, res: http.ServerResponse, next: (typeof middleware)[number]) => {
       const dispatch = (i: number): Promise<any> => {
         let index = -1;
@@ -45,11 +49,8 @@ export default class Application {
     return requestHandler;
   }
 
-  private handleRequest(
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-    fnMiddleware: (typeof this.middleware)[number],
-  ) {
-    return fnMiddleware(req, res);
+  // eslint-disable-next-line class-methods-use-this
+  private handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
+    return fnMiddleware(req, res, async () => ({}));
   }
 }
