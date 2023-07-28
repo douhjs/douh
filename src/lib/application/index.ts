@@ -1,8 +1,10 @@
 import * as http from 'http';
+import * as onFinished from 'on-finished';
 
 // supply async await next() function
 export type NextFunction = () => Promise<any>;
 type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
+const primitiveType = new Set(['string', 'number', 'boolean', 'undefined', 'null']);
 
 export default class Application {
   private middleware: Middleware[];
@@ -51,6 +53,24 @@ export default class Application {
 
   // eslint-disable-next-line class-methods-use-this
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
-    return fnMiddleware(req, res, async () => ({}));
+    const handleResponse = () => this.response(req, res);
+    onFinished(res, this.onError);
+    return fnMiddleware(req, res, async () => ({}))
+      .then(handleResponse)
+      .catch(this.onError);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private response(req: http.IncomingMessage, res: http.ServerResponse) {
+    if (primitiveType.has(typeof res.body)) {
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end(res.body);
+    }
+  }
+
+  // TODO: implement error handler
+  // eslint-disable-next-line class-methods-use-this
+  private onError(err: Error | null, _: http.ServerResponse<http.IncomingMessage>) {
+    if (err instanceof Error) throw new Error(err.message);
   }
 }

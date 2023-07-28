@@ -1,6 +1,5 @@
 import * as http from 'http';
 import { Router } from '../lib/router';
-import { responseParser } from '../lib/response';
 
 const router = new Router();
 
@@ -26,5 +25,5 @@ export function handleRequest(req: http.IncomingMessage, res: http.ServerRespons
     }
   })();
 
-  responseParser(res, response);
+  res.body = response;
 }
