@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/boom": "^10.0.1",
     "on-finished": "^2.4.1"
   },
   "devDependencies": {
