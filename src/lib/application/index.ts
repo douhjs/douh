@@ -65,6 +65,9 @@ export default class Application {
     if (primitiveType.has(typeof res.body)) {
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end(res.body);
+    } else {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(res.body));
     }
   }
 

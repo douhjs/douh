@@ -4,7 +4,11 @@ import { Router } from '../lib/router';
 const router = new Router();
 
 router.get('/ping', () => {
-  return 'pong';
+  return {
+    data: {
+      items: [{ hi: 'hi' }],
+    },
+  };
 });
 
 router.post('/', (req) => {
