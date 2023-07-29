@@ -48,7 +48,9 @@ export class Router {
   middleware() {
     return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
       const { method, url } = req;
-      const registeredRoute = this.routes.find((route) => route.method === method && route.path === url);
+      const registeredRoute = this.routes.find(
+        (route) => route.method.toLowerCase() === method?.toLowerCase() && route.path === url,
+      );
       if (registeredRoute) {
         await registeredRoute.handler(req, res, next);
         await next();
