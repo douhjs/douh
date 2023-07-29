@@ -3,7 +3,7 @@ import * as onFinished from 'on-finished';
 
 // supply async await next() function
 export type NextFunction = () => Promise<any>;
-type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
+export type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
 const primitiveType = new Set(['string', 'number', 'boolean', 'undefined', 'null']);
 
 export default class Application {
@@ -54,19 +54,20 @@ export default class Application {
   // eslint-disable-next-line class-methods-use-this
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
     const handleResponse = () => this.response(req, res);
-    onFinished(res, this.onError);
+    const onError = (err: Error | null) => this.onError(err, res);
+    onFinished(res, onError);
     return fnMiddleware(req, res, async () => ({}))
       .then(handleResponse)
-      .catch(this.onError);
+      .catch(onError);
   }
 
   // eslint-disable-next-line class-methods-use-this
   private response(req: http.IncomingMessage, res: http.ServerResponse) {
     if (primitiveType.has(typeof res.body)) {
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
       res.end(res.body);
     } else {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(res.statusCode, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(res.body));
     }
   }

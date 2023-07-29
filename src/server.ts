@@ -1,4 +1,4 @@
-import { handleRequest } from './routes';
+import { router } from './routes';
 import App from './lib/application';
 import { bodyParser } from './lib/body';
 
@@ -17,7 +17,7 @@ app.use(async (req, res, next) => {
   await next();
 });
 
-app.use(handleRequest);
+app.use(router.middleware());
 
 (async () => {
   await app.listen(port, hostname);

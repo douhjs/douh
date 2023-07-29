@@ -1,18 +1,61 @@
-import * as http from 'http';
-import { NextFunction } from '../application';
+import { IncomingMessage, ServerResponse } from 'http';
+import { Middleware, NextFunction } from '../application';
 
+const availableMethods = ['GET', 'POST', 'PATCH', 'DELETE', 'HEAD', 'PUT'];
+type AvailableMethods = (typeof availableMethods)[number];
+
+// 라우트 정보를 저장할 객체 타입 정의
+type Route = {
+  method: AvailableMethods;
+  path: string;
+  handler: Middleware;
+};
+
+// 라우터 클래스
 export class Router {
-  public getRoutes: Record<string, any> = {
-    '/': (req: any, res: any) => 'Hello World!',
-  };
+  routes: Route[] = [];
 
-  public postROutes: Record<string, any> = {};
-
-  get(path: string, handler: (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any) {
-    this.getRoutes[path] = handler;
+  // GET 메서드 라우터 등록
+  get(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'GET', path, handler });
   }
 
-  post(path: string, handler: (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any) {
-    this.postROutes[path] = handler;
+  // POST 메서드 라우터 등록
+  post(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'POST', path, handler });
+  }
+
+  // PATCH 메서드 라우터 등록
+  patch(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'PATCH', path, handler });
+  }
+
+  // DELETE 메서드 라우터 등록
+  delete(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'DELETE', path, handler });
+  }
+
+  // HEAD 메서드 라우터 등록
+  head(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'HEAD', path, handler });
+  }
+
+  // PUT 메서드 라우터 등록
+  put(path: AvailableMethods, handler: Middleware) {
+    this.routes.push({ method: 'PUT', path, handler });
+  }
+
+  middleware() {
+    return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+      const { method, url } = req;
+      const registeredRoute = this.routes.find((route) => route.method === method && route.path === url);
+      if (registeredRoute) {
+        await registeredRoute.handler(req, res, next);
+        await next();
+      } else {
+        res.statusCode = 404;
+        res.body = `Cannot Get ${url}`;
+      }
+    };
   }
 }
