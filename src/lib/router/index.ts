@@ -52,7 +52,8 @@ export class Router {
         (route) => route.method.toLowerCase() === method?.toLowerCase() && route.path === url,
       );
       if (registeredRoute) {
-        await registeredRoute.handler(req, res, next);
+        const body = await registeredRoute.handler(req, res, next);
+        res.body = body;
         await next();
       } else {
         res.statusCode = 404;
