@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Middleware, NextFunction } from '../application';
+import { notFound } from '../exceptions';
 
 const availableMethods = ['GET', 'POST', 'PATCH', 'DELETE', 'HEAD', 'PUT'];
 type AvailableMethods = (typeof availableMethods)[number];
@@ -56,8 +57,7 @@ export class Router {
         res.body = body;
         await next();
       } else {
-        res.statusCode = 404;
-        res.body = `Cannot Get ${url}`;
+        throw notFound(`Cannot ${method} ${url}`);
       }
     };
   }

@@ -1,5 +1,6 @@
 import * as http from 'http';
 import * as onFinished from 'on-finished';
+import { Exception } from '../exceptions';
 
 // supply async await next() function
 export type NextFunction = () => Promise<any>;
@@ -23,10 +24,10 @@ export default class Application {
     return server.listen(port, hostname, undefined, listeningListener);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private compose(middleware: Middleware[]) {
     return (req: http.IncomingMessage, res: http.ServerResponse, next: (typeof middleware)[number]) => {
-      const dispatch = (i: number): Promise<any> => {
+      // eslint-disable-next-line consistent-return
+      const dispatch = async (i: number): Promise<any> => {
         let index = -1;
         if (i <= index) return Promise.reject(new Error('next() called multiple times'));
         index = i;
@@ -34,9 +35,9 @@ export default class Application {
         if (i === middleware.length) fn = next;
         if (!fn) return Promise.resolve();
         try {
-          return Promise.resolve(fn(req, res, dispatch.bind(null, i + 1)));
+          return await fn(req, res, dispatch.bind(null, i + 1));
         } catch (err) {
-          return Promise.reject(err);
+          this.onError(err, res);
         }
       };
       return dispatch(0);
@@ -52,17 +53,20 @@ export default class Application {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
+  private async handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
     const handleResponse = () => this.response(req, res);
-    const onError = (err: Error | null) => this.onError(err, res);
+    const onError = (err: any) => this.onError(err, res);
     onFinished(res, onError);
-    return fnMiddleware(req, res, async () => ({}))
-      .then(handleResponse)
-      .catch(onError);
+    try {
+      await fnMiddleware(req, res, async () => ({}));
+      handleResponse();
+    } catch (err) {
+      onError(err);
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private response(req: http.IncomingMessage, res: http.ServerResponse) {
+  private response(_: http.IncomingMessage, res: http.ServerResponse) {
     if (primitiveType.has(typeof res.body)) {
       res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
       res.end(res.body);
@@ -72,9 +76,19 @@ export default class Application {
     }
   }
 
-  // TODO: implement error handler
   // eslint-disable-next-line class-methods-use-this
-  private onError(err: Error | null, _: http.ServerResponse<http.IncomingMessage>) {
-    if (err instanceof Error) throw new Error(err.message);
+  private onError(err: Exception, res: http.ServerResponse<http.IncomingMessage>) {
+    if (err) {
+      const msg = err.stack || err.toString();
+      if (err instanceof Exception) {
+        res.statusCode = err.status;
+        res.body = err.data.errorMessage || err.message || 'Internal Server Error';
+        console.error(`\n${msg.replace(/^/gm, '  ')}\n`);
+      } else {
+        res.statusCode = 500;
+        res.body = 'Internal Server Error';
+        console.error(`\n${msg.replace(/^/gm, '  ')}\n`);
+      }
+    }
   }
 }
