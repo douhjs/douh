@@ -1,14 +1,17 @@
 {
   "name": "douh",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha.4",
   "description": "node.js http based framework",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "author": "changchanghwnag",
   "homepage": "https://github.com/changchanghwang/douh#readme",
   "scripts": {
-    "build": "tsc"
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc && tsc-alias",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs && tsc-alias --outDir dist/cjs"
   },
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/index.d.ts",
+  "esm": "./dist/index.js",
   "license": "MIT",
   "dependencies": {
     "on-finished": "^2.4.1"
@@ -25,6 +28,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.7",
     "typescript": "^5.1.6"
   },
   "bugs": {
