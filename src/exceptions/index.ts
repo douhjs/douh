@@ -20,11 +20,11 @@ export function badRequest(message?: string, data?: { errorMessage?: string }) {
 }
 
 export function unauthorized(message?: string, data?: { errorMessage?: string }) {
-  return new Exception(401, message ?? 'Bad Request', data);
+  return new Exception(401, message ?? 'Unauthorized', data);
 }
 
 export function forbidden(message?: string, data?: { errorMessage?: string }) {
-  return new Exception(403, message ?? 'Bad Request', data);
+  return new Exception(403, message ?? 'Forbidden', data);
 }
 
 export function notFound(message?: string, data?: { errorMessage?: string }) {
@@ -32,5 +32,5 @@ export function notFound(message?: string, data?: { errorMessage?: string }) {
 }
 
 export function gone(message?: string, data?: { errorMessage?: string }) {
-  return new Exception(410, message ?? 'Not Found', data);
+  return new Exception(410, message ?? 'Resource Gone', data);
 }
