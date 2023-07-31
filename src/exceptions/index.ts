@@ -19,6 +19,18 @@ export function badRequest(message?: string, data?: { errorMessage?: string }) {
   return new Exception(400, message ?? 'Bad Request', data);
 }
 
+export function unauthorized(message?: string, data?: { errorMessage?: string }) {
+  return new Exception(401, message ?? 'Unauthorized', data);
+}
+
+export function forbidden(message?: string, data?: { errorMessage?: string }) {
+  return new Exception(403, message ?? 'Forbidden', data);
+}
+
 export function notFound(message?: string, data?: { errorMessage?: string }) {
   return new Exception(404, message ?? 'Not Found', data);
+}
+
+export function gone(message?: string, data?: { errorMessage?: string }) {
+  return new Exception(410, message ?? 'Gone', data);
 }
