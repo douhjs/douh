@@ -36,5 +36,18 @@ describe('Douh application test', () => {
       expect(response.status).toBe(202);
       expect(response.body).toStrictEqual({ message: 'ok' });
     });
+
+    it('should middleware can also use "res.body = something"', async () => {
+      const app = new Application();
+
+      app.use((req, res) => {
+        res.statusCode = 202;
+        res.body = { message: 'ok' };
+      });
+
+      const response = await request(app.callback()).get('/');
+      expect(response.status).toBe(202);
+      expect(response.body).toStrictEqual({ message: 'ok' });
+    });
   });
 });
