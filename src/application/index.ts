@@ -7,7 +7,7 @@ export type NextFunction = () => Promise<any>;
 export type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
 const primitiveType = new Set(['string', 'number', 'boolean', 'undefined', 'null']);
 
-export default class Application {
+export class Application {
   private middleware: Middleware[];
 
   constructor() {
