@@ -39,7 +39,6 @@
   "files": [
     "dist",
     "src/**/*.ts",
-    "src/**/*.tsx",
     "LICENSE",
     "README.md"
   ]
