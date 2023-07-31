@@ -37,8 +37,7 @@ export class Application {
         try {
           const response = await fn(req, res, dispatch.bind(null, i + 1));
 
-          // TODO: 보기 안좋은 condition, 메서드로 분리? util로 분리?
-          if (response && !(Object.keys(response).length === 0 && response.constructor === Object)) {
+          if (response) {
             res.body = response;
           }
           return response;
@@ -64,7 +63,7 @@ export class Application {
     const onError = (err: any) => this.onError(err, res);
     onFinished(res, onError);
     try {
-      await fnMiddleware(req, res, async () => ({}));
+      await fnMiddleware(req, res, async () => {});
     } catch (err) {
       onError(err);
     }
