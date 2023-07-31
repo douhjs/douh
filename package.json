@@ -6,8 +6,8 @@
   "homepage": "https://github.com/changchanghwang/douh#readme",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc --project tsconfig.build.json && tsc-alias",
-    "build:cjs": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json && tsc-alias --outDir dist/esm"
+    "build:cjs": "tsc --project tsconfig.build.json && tsc-alias",
+    "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json && tsc-alias --outDir dist/esm"
   },
   "main": "./dist/cjs/index.js",
   "types": "./dist/esm/index.d.ts",
