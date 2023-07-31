@@ -32,5 +32,5 @@ export function notFound(message?: string, data?: { errorMessage?: string }) {
 }
 
 export function gone(message?: string, data?: { errorMessage?: string }) {
-  return new Exception(410, message ?? 'Resource Gone', data);
+  return new Exception(410, message ?? 'Gone', data);
 }
