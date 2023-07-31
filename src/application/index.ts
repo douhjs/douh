@@ -19,7 +19,7 @@ export class Application {
     return this;
   }
 
-  async listen(port?: number, hostname?: string, listeningListener?: () => void) {
+  async listen(port?: number, listeningListener?: () => void, hostname?: string) {
     const server = http.createServer(this.callback());
     return server.listen(port, hostname, undefined, listeningListener);
   }
@@ -35,7 +35,11 @@ export class Application {
         if (i === middleware.length) fn = next;
         if (!fn) return Promise.resolve();
         try {
-          return await fn(req, res, dispatch.bind(null, i + 1));
+          const response = await fn(req, res, dispatch.bind(null, i + 1));
+          if (response) {
+            res.body = response;
+          }
+          return this.response(req, res);
         } catch (err) {
           this.onError(err, res);
         }
