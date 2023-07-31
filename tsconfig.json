@@ -5,6 +5,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
+    "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
