@@ -5,6 +5,7 @@
   "author": "changchanghwnag",
   "homepage": "https://github.com/changchanghwang/douh#readme",
   "scripts": {
+    "test": "jest",
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc && tsc-alias",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs && tsc-alias --outDir dist/cjs"
