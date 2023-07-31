@@ -34,3 +34,7 @@ export function notFound(message?: string, data?: { errorMessage?: string }) {
 export function gone(message?: string, data?: { errorMessage?: string }) {
   return new Exception(410, message ?? 'Gone', data);
 }
+
+export function notImplemented(message?: string, data?: { errorMessage?: string }) {
+  return new Exception(501, message ?? 'Not Implemented', data);
+}
