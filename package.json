@@ -6,8 +6,8 @@
   "homepage": "https://github.com/douhjs/douh",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:cjs": "tsc --project tsconfig.build.json && tsc-alias",
-    "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json && tsc-alias --outDir dist/esm"
+    "build:cjs": "tsc --project tsconfig.build.json",
+    "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json"
   },
   "main": "./dist/cjs/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -28,7 +28,6 @@
     "eslint-plugin-prettier": "^5.0.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.7",
     "typescript": "^5.1.6"
   },
   "bugs": {
