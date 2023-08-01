@@ -58,7 +58,7 @@ describe('router test', () => {
 
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(202);
-      expect(response.text).toStrictEqual('pong');
+      expect(response.text).toBe('pong');
     });
 
     it('should return json with "res.body = something" statement', async () => {
@@ -93,11 +93,11 @@ describe('router test', () => {
 
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(200);
-      expect(response.text).toStrictEqual('ok');
+      expect(response.text).toBe('ok');
 
       const response2 = await request(app.callback()).get('/ping2');
       expect(response2.statusCode).toBe(200);
-      expect(response2.text).toStrictEqual('ok2');
+      expect(response2.text).toBe('ok2');
     });
   });
 
@@ -116,7 +116,7 @@ describe('router test', () => {
       const response = await request(app.callback()).post('/ping');
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ message: 'created' });
-      expect(response.text).toStrictEqual(JSON.stringify({ message: 'created' }));
+      expect(response.text).toBe(JSON.stringify({ message: 'created' }));
     });
 
     it('should get request body in middleware', async () => {
@@ -134,7 +134,7 @@ describe('router test', () => {
       const response = await request(app.callback()).post('/ping').send({ name: 'Lee' });
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ name: 'Lee' });
-      expect(response.text).toStrictEqual(JSON.stringify({ name: 'Lee' }));
+      expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
     });
   });
 
@@ -152,7 +152,7 @@ describe('router test', () => {
       const response = await request(app.callback()).patch('/ping');
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual({ message: 'created' });
-      expect(response.text).toStrictEqual(JSON.stringify({ message: 'created' }));
+      expect(response.text).toBe(JSON.stringify({ message: 'created' }));
     });
 
     it('should get request body in middleware', async () => {
@@ -169,7 +169,25 @@ describe('router test', () => {
       const response = await request(app.callback()).patch('/ping').send({ name: 'Lee' });
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual({ name: 'Lee' });
-      expect(response.text).toStrictEqual(JSON.stringify({ name: 'Lee' }));
+      expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
+    });
+  });
+
+  describe('DELETE test', () => {
+    it('should get json response from api call', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.delete('/ping', (req, res) => {
+        res.body = { message: 'deleted' };
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).delete('/ping');
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual({ message: 'deleted' });
+      expect(response.text).toBe(JSON.stringify({ message: 'deleted' }));
     });
   });
 });
