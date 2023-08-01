@@ -99,6 +99,20 @@ describe('router test', () => {
       expect(response2.statusCode).toBe(200);
       expect(response2.text).toBe('ok2');
     });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.get('/ping/:name', (req, res) => {
+        return req.params;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).get('/ping/arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
   });
 
   describe('POST test', () => {
@@ -136,6 +150,20 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'Lee' });
       expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
     });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.post('/ping/:name', (req, res) => {
+        return req.params;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).post('/ping/arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
   });
 
   describe('PATCH test', () => {
@@ -171,6 +199,20 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'Lee' });
       expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
     });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.patch('/ping/:name', (req, res) => {
+        return req.params;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).patch('/ping/arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
   });
 
   describe('DELETE test', () => {
@@ -188,6 +230,20 @@ describe('router test', () => {
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual({ message: 'deleted' });
       expect(response.text).toBe(JSON.stringify({ message: 'deleted' }));
+    });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.delete('/ping/:name', (req, res) => {
+        return req.params;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).delete('/ping/arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
     });
   });
 
@@ -218,6 +274,20 @@ describe('router test', () => {
 
       const response = await request(app.callback()).head('/ping');
       expect(response.headers.connection).toBe('Keep-Alive');
+    });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.head('/ping/:name', (req, res) => {
+        res.setHeader('name', req.params.name);
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).head('/ping/arthur');
+      expect(response.headers.name).toBe('arthur');
     });
   });
 
@@ -253,6 +323,20 @@ describe('router test', () => {
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual({ name: 'Lee' });
       expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
+    });
+
+    it('should get params object when url has params', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.put('/ping/:name', (req, res) => {
+        return req.params;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).put('/ping/arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
     });
   });
 });
