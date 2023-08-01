@@ -27,5 +27,5 @@
 - [ ] The new commits follow conventions explained in [CONTRIBUTING.md](https://github.com/douhjs/douh/blob/main/CONTRIBUTING.md)
 
 <!--
-  🎉 Thank you for contributing and making TypeORM even better!
+  🎉 Thank you for contributing and making Douh even better!
 -->
