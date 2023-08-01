@@ -1,5 +1,6 @@
 import * as request from 'supertest';
-import { Application } from './';
+import { Application } from '.';
+
 describe('Douh application test', () => {
   it('should be defined', () => {
     expect(Application).toBeDefined();

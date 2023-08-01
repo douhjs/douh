@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { getApp } from '../../test/app';
-import { Router } from './';
+import { Router } from '.';
 
 describe('router test', () => {
   it('should be defined', () => {
@@ -44,8 +44,7 @@ describe('router test', () => {
     expect(response.body).toStrictEqual({ message: 'pong' });
   });
 
-  // FIXME: router이용해서 ctx.body = ''로 return하는 방식은 작동하지 않음.
-  it('should return plain text with "ctx.body = something" statement', async () => {
+  it('should return plain text with "res.body = something" statement', async () => {
     const app = getApp();
     const router = new Router();
 
@@ -61,7 +60,7 @@ describe('router test', () => {
     expect(response.text).toStrictEqual('pong');
   });
 
-  it('should return json with "ctx.body = something" statement', async () => {
+  it('should return json with "res.body = something" statement', async () => {
     const app = getApp();
     const router = new Router();
 

@@ -54,8 +54,11 @@ export class Router {
       );
       if (registeredRoute) {
         const body = await registeredRoute.handler(req, res, next);
-        res.body = body;
-        return await next();
+
+        if (body) {
+          res.body = body;
+        }
+        await next();
       } else {
         throw notFound(`Cannot ${method} ${url}`);
       }
