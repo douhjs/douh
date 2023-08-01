@@ -36,15 +36,17 @@ export class Application {
         if (!fn) return Promise.resolve();
         try {
           const response = await fn(req, res, dispatch.bind(null, i + 1));
+
           if (response) {
             res.body = response;
           }
-          return this.response(req, res);
+          return response;
         } catch (err) {
           this.onError(err, res);
         }
       };
-      return dispatch(0);
+
+      return dispatch(0).then(() => this.response(req, res));
     };
   }
 
@@ -58,12 +60,10 @@ export class Application {
 
   // eslint-disable-next-line class-methods-use-this
   private async handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
-    const handleResponse = () => this.response(req, res);
     const onError = (err: any) => this.onError(err, res);
     onFinished(res, onError);
     try {
-      await fnMiddleware(req, res, async () => ({}));
-      handleResponse();
+      await fnMiddleware(req, res, async () => {});
     } catch (err) {
       onError(err);
     }
