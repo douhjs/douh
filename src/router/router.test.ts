@@ -190,4 +190,34 @@ describe('router test', () => {
       expect(response.text).toBe(JSON.stringify({ message: 'deleted' }));
     });
   });
+
+  describe('HEAD test', () => {
+    it('should be available to set statusCode in route', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.head('/ping', (req, res) => {
+        res.statusCode = 204;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).head('/ping');
+      expect(response.status).toBe(204);
+    });
+
+    it('should be available to set header in route', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.head('/ping', (req, res) => {
+        res.setHeader('Connection', 'Keep-Alive');
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).head('/ping');
+      expect(response.headers.connection).toBe('Keep-Alive');
+    });
+  });
 });
