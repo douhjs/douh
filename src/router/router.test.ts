@@ -144,15 +144,15 @@ describe('router test', () => {
       const router = new Router();
 
       router.patch('/ping', (req, res) => {
-        res.body = { message: 'created' };
+        res.body = { message: 'updated' };
       });
 
       app.use(router.middleware());
 
       const response = await request(app.callback()).patch('/ping');
       expect(response.status).toBe(200);
-      expect(response.body).toStrictEqual({ message: 'created' });
-      expect(response.text).toBe(JSON.stringify({ message: 'created' }));
+      expect(response.body).toStrictEqual({ message: 'updated' });
+      expect(response.text).toBe(JSON.stringify({ message: 'updated' }));
     });
 
     it('should get request body in middleware', async () => {
@@ -218,6 +218,41 @@ describe('router test', () => {
 
       const response = await request(app.callback()).head('/ping');
       expect(response.headers.connection).toBe('Keep-Alive');
+    });
+  });
+
+  describe('PUT test', () => {
+    it('should get json response from api call', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.put('/ping', (req, res) => {
+        res.body = { message: 'updated' };
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).put('/ping');
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual({ message: 'updated' });
+      expect(response.text).toBe(JSON.stringify({ message: 'updated' }));
+    });
+
+    it('should get request body in middleware', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.put('/ping', (req, res) => {
+        return req.body;
+      });
+
+      app.use(getBodyParser());
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).put('/ping').send({ name: 'Lee' });
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual({ name: 'Lee' });
+      expect(response.text).toBe(JSON.stringify({ name: 'Lee' }));
     });
   });
 });
