@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import { getApp } from '../../test/app';
+import { getApp, getBodyParser } from '../../test';
 import { Router } from '.';
 
 describe('router test', () => {
@@ -12,67 +12,129 @@ describe('router test', () => {
     expect(router).toBeDefined();
   });
 
-  it('should return plain text with return statement', async () => {
-    const app = getApp();
-    const router = new Router();
-
-    router.get('/ping', (req, res) => {
-      res.statusCode = 202;
-      return 'pong';
+  describe('GET test', () => {
+    it('should return plain text with return statement', async () => {
+      const app = getApp();
+      const router = new Router();
+  
+      router.get('/ping', (req, res) => {
+        res.statusCode = 202;
+        return 'pong';
+      });
+  
+      app.use(router.middleware());
+  
+      const response = await request(app.callback()).get('/ping');
+      expect(response.statusCode).toBe(202);
+      expect(response.text).toBe('pong');
+    });
+  
+    it('should return json with return statement', async () => {
+      const app = getApp();
+      const router = new Router();
+  
+      router.get('/ping', (req, res) => {
+        res.statusCode = 202;
+        return { message: 'pong' };
+      });
+  
+      app.use(router.middleware());
+  
+      const response = await request(app.callback()).get('/ping');
+      expect(response.statusCode).toBe(202);
+      expect(response.body).toStrictEqual({ message: 'pong' });
+    });
+  
+    it('should return plain text with "res.body = something" statement', async () => {
+      const app = getApp();
+      const router = new Router();
+  
+      router.get('/ping', (req, res) => {
+        res.statusCode = 202;
+        res.body = 'pong';
+      });
+  
+      app.use(router.middleware());
+  
+      const response = await request(app.callback()).get('/ping');
+      expect(response.statusCode).toBe(202);
+      expect(response.text).toStrictEqual('pong');
+    });
+  
+    it('should return json with "res.body = something" statement', async () => {
+      const app = getApp();
+      const router = new Router();
+  
+      router.get('/ping', (req, res) => {
+        res.statusCode = 202;
+        res.body = { message: 'pong' };
+      });
+  
+      app.use(router.middleware());
+  
+      const response = await request(app.callback()).get('/ping');
+      expect(response.statusCode).toBe(202);
+      expect(response.body).toStrictEqual({ message: 'pong' });
     });
 
-    app.use(router.middleware());
+    it('should work with multiple routes', async () => {
+      const app = getApp();
+      const router = new Router();
+  
+      router.get('/ping', (req, res) => {
+        res.body = 'ok';
+      });
 
-    const response = await request(app.callback()).get('/ping');
-    expect(response.statusCode).toBe(202);
-    expect(response.text).toBe('pong');
+      router.get('/ping2', (req, res) => {
+        res.body = 'ok2';
+      });
+  
+      app.use(router.middleware());
+  
+      const response = await request(app.callback()).get('/ping');
+      expect(response.statusCode).toBe(200);
+      expect(response.text).toStrictEqual('ok');
+      
+      const response2 = await request(app.callback()).get('/ping2');
+      expect(response2.statusCode).toBe(200);
+      expect(response2.text).toStrictEqual('ok2');
+    })
   });
 
-  it('should return json with return statement', async () => {
-    const app = getApp();
-    const router = new Router();
+  describe('POST test', () => {
+    it('should get json response from api call', async () => {
+      const app = getApp();
+      const router = new Router();
 
-    router.get('/ping', (req, res) => {
-      res.statusCode = 202;
-      return { message: 'pong' };
+      router.post('/ping', (req, res) => {
+        res.statusCode = 201;
+        res.body = { message: 'created' };
+      })
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).post('/ping');
+      expect(response.status).toBe(201);
+      expect(response.body).toStrictEqual({ message: 'created' });
+      expect(response.text).toStrictEqual(JSON.stringify({ message: 'created' }));
     });
 
-    app.use(router.middleware());
+    it('should get request body in middleware', async () => {
+      const app = getApp();
+      const router = new Router();
 
-    const response = await request(app.callback()).get('/ping');
-    expect(response.statusCode).toBe(202);
-    expect(response.body).toStrictEqual({ message: 'pong' });
-  });
+      router.post('/ping', (req, res) => {
+        res.statusCode = 201;
+        return req.body;
+      })
 
-  it('should return plain text with "res.body = something" statement', async () => {
-    const app = getApp();
-    const router = new Router();
+      app.use(getBodyParser());
+      app.use(router.middleware());
 
-    router.get('/ping', (req, res) => {
-      res.statusCode = 202;
-      res.body = 'pong';
+      const response = await request(app.callback()).post('/ping').send({ name: "Lee" });
+      expect(response.status).toBe(201);
+      expect(response.body).toStrictEqual({ name: "Lee" });
+      expect(response.text).toStrictEqual(JSON.stringify({ name: "Lee" }));
     });
-
-    app.use(router.middleware());
-
-    const response = await request(app.callback()).get('/ping');
-    expect(response.statusCode).toBe(202);
-    expect(response.text).toStrictEqual('pong');
-  });
-
-  it('should return json with "res.body = something" statement', async () => {
-    const app = getApp();
-    const router = new Router();
-
-    router.get('/ping', (req, res) => {
-      res.statusCode = 202;
-      res.body = { message: 'pong' };
-    });
-
-    app.use(router.middleware());
-
-    const response = await request(app.callback()).get('/ping');
-    expect(response.statusCode).toBe(202);
-    expect(response.body).toStrictEqual({ message: 'pong' });
   });
 });
