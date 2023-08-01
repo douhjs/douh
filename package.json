@@ -6,12 +6,12 @@
   "homepage": "https://github.com/douhjs/douh",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc && tsc-alias",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs && tsc-alias --outDir dist/cjs"
+    "build:cjs": "tsc --project tsconfig.build.json && tsc-alias",
+    "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json && tsc-alias --outDir dist/esm"
   },
   "main": "./dist/cjs/index.js",
-  "types": "./dist/index.d.ts",
-  "esm": "./dist/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "esm": "./dist/esm/index.js",
   "license": "MIT",
   "dependencies": {
     "on-finished": "^2.4.1"
