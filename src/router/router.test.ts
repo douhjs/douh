@@ -16,62 +16,62 @@ describe('router test', () => {
     it('should return plain text with return statement', async () => {
       const app = getApp();
       const router = new Router();
-  
+
       router.get('/ping', (req, res) => {
         res.statusCode = 202;
         return 'pong';
       });
-  
+
       app.use(router.middleware());
-  
+
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(202);
       expect(response.text).toBe('pong');
     });
-  
+
     it('should return json with return statement', async () => {
       const app = getApp();
       const router = new Router();
-  
+
       router.get('/ping', (req, res) => {
         res.statusCode = 202;
         return { message: 'pong' };
       });
-  
+
       app.use(router.middleware());
-  
+
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(202);
       expect(response.body).toStrictEqual({ message: 'pong' });
     });
-  
+
     it('should return plain text with "res.body = something" statement', async () => {
       const app = getApp();
       const router = new Router();
-  
+
       router.get('/ping', (req, res) => {
         res.statusCode = 202;
         res.body = 'pong';
       });
-  
+
       app.use(router.middleware());
-  
+
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(202);
       expect(response.text).toStrictEqual('pong');
     });
-  
+
     it('should return json with "res.body = something" statement', async () => {
       const app = getApp();
       const router = new Router();
-  
+
       router.get('/ping', (req, res) => {
         res.statusCode = 202;
         res.body = { message: 'pong' };
       });
-  
+
       app.use(router.middleware());
-  
+
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(202);
       expect(response.body).toStrictEqual({ message: 'pong' });
@@ -80,7 +80,7 @@ describe('router test', () => {
     it('should work with multiple routes', async () => {
       const app = getApp();
       const router = new Router();
-  
+
       router.get('/ping', (req, res) => {
         res.body = 'ok';
       });
@@ -88,17 +88,17 @@ describe('router test', () => {
       router.get('/ping2', (req, res) => {
         res.body = 'ok2';
       });
-  
+
       app.use(router.middleware());
-  
+
       const response = await request(app.callback()).get('/ping');
       expect(response.statusCode).toBe(200);
       expect(response.text).toStrictEqual('ok');
-      
+
       const response2 = await request(app.callback()).get('/ping2');
       expect(response2.statusCode).toBe(200);
       expect(response2.text).toStrictEqual('ok2');
-    })
+    });
   });
 
   describe('POST test', () => {
@@ -109,7 +109,7 @@ describe('router test', () => {
       router.post('/ping', (req, res) => {
         res.statusCode = 201;
         res.body = { message: 'created' };
-      })
+      });
 
       app.use(router.middleware());
 
@@ -126,15 +126,15 @@ describe('router test', () => {
       router.post('/ping', (req, res) => {
         res.statusCode = 201;
         return req.body;
-      })
+      });
 
       app.use(getBodyParser());
       app.use(router.middleware());
 
-      const response = await request(app.callback()).post('/ping').send({ name: "Lee" });
+      const response = await request(app.callback()).post('/ping').send({ name: 'Lee' });
       expect(response.status).toBe(201);
-      expect(response.body).toStrictEqual({ name: "Lee" });
-      expect(response.text).toStrictEqual(JSON.stringify({ name: "Lee" }));
+      expect(response.body).toStrictEqual({ name: 'Lee' });
+      expect(response.text).toStrictEqual(JSON.stringify({ name: 'Lee' }));
     });
   });
 
@@ -145,7 +145,7 @@ describe('router test', () => {
 
       router.patch('/ping', (req, res) => {
         res.body = { message: 'created' };
-      })
+      });
 
       app.use(router.middleware());
 
@@ -161,15 +161,15 @@ describe('router test', () => {
 
       router.patch('/ping', (req, res) => {
         return req.body;
-      })
+      });
 
       app.use(getBodyParser());
       app.use(router.middleware());
 
-      const response = await request(app.callback()).patch('/ping').send({ name: "Lee" });
+      const response = await request(app.callback()).patch('/ping').send({ name: 'Lee' });
       expect(response.status).toBe(200);
-      expect(response.body).toStrictEqual({ name: "Lee" });
-      expect(response.text).toStrictEqual(JSON.stringify({ name: "Lee" }));
+      expect(response.body).toStrictEqual({ name: 'Lee' });
+      expect(response.text).toStrictEqual(JSON.stringify({ name: 'Lee' }));
     });
   });
 });
