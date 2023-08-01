@@ -137,4 +137,39 @@ describe('router test', () => {
       expect(response.text).toStrictEqual(JSON.stringify({ name: "Lee" }));
     });
   });
+
+  describe('PATCH test', () => {
+    it('should get json response from api call', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.patch('/ping', (req, res) => {
+        res.body = { message: 'created' };
+      })
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).patch('/ping');
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual({ message: 'created' });
+      expect(response.text).toStrictEqual(JSON.stringify({ message: 'created' }));
+    });
+
+    it('should get request body in middleware', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.patch('/ping', (req, res) => {
+        return req.body;
+      })
+
+      app.use(getBodyParser());
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).patch('/ping').send({ name: "Lee" });
+      expect(response.status).toBe(200);
+      expect(response.body).toStrictEqual({ name: "Lee" });
+      expect(response.text).toStrictEqual(JSON.stringify({ name: "Lee" }));
+    });
+  });
 });
