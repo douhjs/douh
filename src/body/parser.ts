@@ -4,10 +4,13 @@ import { NextFunction } from '../application';
 declare module 'http' {
   interface IncomingMessage {
     // NOTE: supply parse JSON body at Now
-    body?: {
+    body: {
       [key: string]: any;
     };
     params: {
+      [key: string]: any;
+    };
+    query: {
       [key: string]: any;
     };
   }
@@ -18,6 +21,7 @@ declare module 'http' {
 
 const methodContainedBody = new Set(['POST', 'PUT', 'PATCH']);
 
+//FIXME: supply parse JSON body at Now
 export function bodyParser(req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) {
   if (req.method && methodContainedBody.has(req.method)) {
     const buffers: Buffer[] = [];
@@ -25,7 +29,7 @@ export function bodyParser(req: http.IncomingMessage, res: http.ServerResponse, 
       buffers.push(chunk);
       const payload = Buffer.concat(buffers).toString();
       const body = JSON.parse(payload);
-      req.body = body;
+      req.body = body ?? {};
       next();
     });
   } else {
