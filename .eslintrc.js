@@ -30,6 +30,7 @@ module.exports = {
     'no-useless-constructor': 'off',
     'max-classes-per-file': 'off',
     'no-shadow': 'off',
+    'no-plusplus':'off',
     'prettier/prettier': 'error',
     'no-param-reassign': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.spec.*', '**/*.test.*'] }],
