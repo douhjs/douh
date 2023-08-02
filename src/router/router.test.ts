@@ -128,7 +128,7 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'arthur' });
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -140,6 +140,34 @@ describe('router test', () => {
 
       const response = await request(app.callback()).get('/user/arthur/profile/1');
       expect(response.body).toStrictEqual({ name: 'arthur', id: '1' });
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.get('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).get('/ping?name=arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.get('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).get('/ping?name=arthur&age=20');
+      expect(response.body).toStrictEqual({ name: 'arthur', age: '20' });
     });
   });
 
@@ -207,7 +235,7 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'arthur' });
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -219,6 +247,34 @@ describe('router test', () => {
 
       const response = await request(app.callback()).post('/user/arthur/profile/1');
       expect(response.body).toStrictEqual({ name: 'arthur', id: '1' });
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.post('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).post('/ping?name=arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.post('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).post('/ping?name=arthur&age=20');
+      expect(response.body).toStrictEqual({ name: 'arthur', age: '20' });
     });
   });
 
@@ -284,7 +340,7 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'arthur' });
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -296,6 +352,34 @@ describe('router test', () => {
 
       const response = await request(app.callback()).patch('/user/arthur/profile/1');
       expect(response.body).toStrictEqual({ name: 'arthur', id: '1' });
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.patch('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).patch('/ping?name=arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.patch('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).patch('/ping?name=arthur&age=20');
+      expect(response.body).toStrictEqual({ name: 'arthur', age: '20' });
     });
   });
 
@@ -344,7 +428,7 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'arthur' });
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -356,6 +440,34 @@ describe('router test', () => {
 
       const response = await request(app.callback()).delete('/user/arthur/profile/1');
       expect(response.body).toStrictEqual({ name: 'arthur', id: '1' });
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.delete('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).delete('/ping?name=arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.delete('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).delete('/ping?name=arthur&age=20');
+      expect(response.body).toStrictEqual({ name: 'arthur', age: '20' });
     });
   });
 
@@ -416,7 +528,7 @@ describe('router test', () => {
       expect(response.headers.name).toBe('arthur');
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -430,6 +542,36 @@ describe('router test', () => {
       const response = await request(app.callback()).head('/user/arthur/profile/1');
       expect(response.headers.name).toBe('arthur');
       expect(response.headers.id).toBe('1');
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.head('/ping', (req, res) => {
+        res.setHeader('name', req.query.name);
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).head('/ping?name=arthur');
+      expect(response.headers.name).toBe('arthur');
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.head('/ping', (req, res) => {
+        res.setHeader('name', req.query.name);
+        res.setHeader('age', req.query.age);
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).head('/ping?name=arthur&age=20');
+      expect(response.headers.name).toBe('arthur');
+      expect(response.headers.age).toBe('20');
     });
   });
 
@@ -495,7 +637,7 @@ describe('router test', () => {
       expect(response.body).toStrictEqual({ name: 'arthur' });
     });
 
-    it('should get multi params object when url has params', async () => {
+    it('should get params object when url has multi params', async () => {
       const app = getApp();
       const router = new Router();
 
@@ -507,6 +649,34 @@ describe('router test', () => {
 
       const response = await request(app.callback()).put('/user/arthur/profile/1');
       expect(response.body).toStrictEqual({ name: 'arthur', id: '1' });
+    });
+
+    it('should get query object when url has querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.put('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).put('/ping?name=arthur');
+      expect(response.body).toStrictEqual({ name: 'arthur' });
+    });
+
+    it('should get query object when url has multi querystring', async () => {
+      const app = getApp();
+      const router = new Router();
+
+      router.put('/ping', (req, res) => {
+        return req.query;
+      });
+
+      app.use(router.middleware());
+
+      const response = await request(app.callback()).put('/ping?name=arthur&age=20');
+      expect(response.body).toStrictEqual({ name: 'arthur', age: '20' });
     });
   });
 });
