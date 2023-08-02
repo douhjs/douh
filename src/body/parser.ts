@@ -1,28 +1,9 @@
-import * as http from 'http';
+import { DouhRequest, DouhResponse } from '../http';
 import { NextFunction } from '../application';
-
-declare module 'http' {
-  interface IncomingMessage {
-    // NOTE: supply parse JSON body at Now
-    body: {
-      [key: string]: any;
-    };
-    params: {
-      [key: string]: any;
-    };
-    query: {
-      [key: string]: any;
-    };
-  }
-  interface ServerResponse {
-    body?: any;
-  }
-}
 
 const methodContainedBody = new Set(['POST', 'PUT', 'PATCH']);
 
-//FIXME: supply parse JSON body at Now
-export function bodyParser(req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) {
+export function bodyParser(req: DouhRequest, res: DouhResponse, next: NextFunction) {
   if (req.method && methodContainedBody.has(req.method)) {
     const buffers: Buffer[] = [];
     req.on('data', (chunk: Buffer) => {

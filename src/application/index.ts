@@ -1,10 +1,11 @@
-import * as http from 'http';
+import { createServer } from 'http';
 import * as onFinished from 'on-finished';
+import { DouhRequest, DouhResponse } from '../http';
 import { Exception } from '../exceptions';
 
 // supply async await next() function
 export type NextFunction = () => Promise<any>;
-export type Middleware = (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => any;
+export type Middleware = (req: DouhRequest, res: DouhResponse, next: NextFunction) => any;
 const primitiveType = new Set(['string', 'number', 'boolean', 'undefined', 'null']);
 
 export class Application {
@@ -20,12 +21,18 @@ export class Application {
   }
 
   async listen(port?: number, listeningListener?: () => void, hostname?: string) {
-    const server = http.createServer(this.callback());
+    const server = createServer(
+      {
+        IncomingMessage: DouhRequest,
+        ServerResponse: DouhResponse,
+      },
+      this.callback(),
+    );
     return server.listen(port, hostname, undefined, listeningListener);
   }
 
   private compose(middleware: Middleware[]) {
-    return (req: http.IncomingMessage, res: http.ServerResponse, next: (typeof middleware)[number]) => {
+    return (req: DouhRequest, res: DouhResponse, next: (typeof middleware)[number]) => {
       // eslint-disable-next-line consistent-return
       const dispatch = async (i: number): Promise<any> => {
         let index = -1;
@@ -52,14 +59,14 @@ export class Application {
 
   callback() {
     const fn = this.compose(this.middleware);
-    const requestHandler = (req: http.IncomingMessage, res: http.ServerResponse) => {
+    const requestHandler = (req: DouhRequest, res: DouhResponse) => {
       return this.handleRequest(req, res, fn);
     };
     return requestHandler;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private async handleRequest(req: http.IncomingMessage, res: http.ServerResponse, fnMiddleware: Middleware) {
+  private async handleRequest(req: DouhRequest, res: DouhResponse, fnMiddleware: Middleware) {
     const onError = (err: any) => this.onError(err, res);
     onFinished(res, onError);
     try {
@@ -70,7 +77,7 @@ export class Application {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private response(_: http.IncomingMessage, res: http.ServerResponse) {
+  private response(_: DouhRequest, res: DouhResponse) {
     if (primitiveType.has(typeof res.body)) {
       res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
       res.end(res.body);
@@ -81,7 +88,7 @@ export class Application {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private onError(err: Exception, res: http.ServerResponse<http.IncomingMessage>) {
+  private onError(err: Exception, res: DouhResponse) {
     if (err) {
       const msg = err.stack || err.toString();
       if (err instanceof Exception) {
