@@ -49,9 +49,28 @@ export class Router {
   middleware() {
     return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
       const { method, url } = req;
-      const registeredRoute = this.routes.find(
-        (route) => route.method.toLowerCase() === method?.toLowerCase() && route.path === url,
-      );
+
+      const registeredRoute = this.routes
+        .filter((route) => route.method === method)
+        .find((route) => {
+          const splittedRoute = route.path.split('/');
+          const splittedUrl = url?.split('/');
+          if (splittedRoute.length !== splittedUrl?.length) {
+            return false;
+          }
+
+          const params: Record<string, any> = {};
+          for (let i = 0; i < splittedRoute.length; i++) {
+            if (splittedRoute[i].startsWith(':')) {
+              params[splittedRoute[i].slice(1)] = splittedUrl[i];
+            } else if (splittedRoute[i] !== splittedUrl[i]) {
+              return false;
+            }
+          }
+          req.params = params;
+          return true;
+        });
+
       if (registeredRoute) {
         const body = await registeredRoute.handler(req, res, next);
 

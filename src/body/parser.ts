@@ -7,6 +7,9 @@ declare module 'http' {
     body?: {
       [key: string]: any;
     };
+    params: {
+      [key: string]: any;
+    };
   }
   interface ServerResponse {
     body?: any;
