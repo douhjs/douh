@@ -1,7 +1,7 @@
 {
   "name": "douh",
-  "version": "0.0.3-alpha.1",
-  "description": "node.js http based framework",
+  "version": "0.0.3-alpha.2",
+  "description": "http based node.js web server framework",
   "author": "changchanghwnag",
   "homepage": "https://github.com/douhjs/douh",
   "scripts": {
@@ -45,7 +45,8 @@
     "node",
     "http",
     "framework",
-    "web"
+    "web",
+    "server"
   ],
   "files": [
     "dist",

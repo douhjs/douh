@@ -54,7 +54,9 @@ export class Router {
         .filter((route) => route.method === method)
         .find((route) => {
           const splittedRoute = route.path.split('/');
-          const splittedUrl = url?.split('/');
+          const [endpoint, queryString] = url?.split('?') ?? [];
+          const searchParams = new URLSearchParams(queryString);
+          const splittedUrl = endpoint.split('/');
           if (splittedRoute.length !== splittedUrl?.length) {
             return false;
           }
@@ -68,6 +70,13 @@ export class Router {
             }
           }
           req.params = params;
+
+          const queryPrams: Record<string, any> = {};
+          for (const [key, value] of searchParams) {
+            queryPrams[key] = value;
+          }
+          req.query = queryPrams;
+
           return true;
         });
 

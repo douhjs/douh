@@ -10,7 +10,7 @@ export function bodyParser(req: DouhRequest, res: DouhResponse, next: NextFuncti
       buffers.push(chunk);
       const payload = Buffer.concat(buffers).toString();
       const body = JSON.parse(payload);
-      req.body = body;
+      req.body = body ?? {};
       next();
     });
   } else {

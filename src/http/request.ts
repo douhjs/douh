@@ -6,6 +6,8 @@ export class DouhRequest extends http.IncomingMessage {
 
   params: Record<string, any> = {};
 
+  query: Record<string, any> = {};
+
   constructor(socket: net.Socket) {
     super(socket);
   }

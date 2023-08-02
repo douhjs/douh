@@ -1,4 +1,4 @@
-import { createServer, ServerResponse } from 'http';
+import { createServer } from 'http';
 import * as onFinished from 'on-finished';
 import { DouhRequest, DouhResponse } from '../http';
 import { Exception } from '../exceptions';

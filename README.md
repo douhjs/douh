@@ -41,3 +41,20 @@ app.use(async (req, res, next) => {
   console.timeEnd('end');
 });
 ```
+
+### Use Router
+
+```typescript
+import App, { Router } from 'douh';
+
+const app = new App();
+const router = new Router();
+
+router.get('/ping', (req, res, next) => {
+  return 'pong';
+});
+
+app.use(router.middleware());
+
+app.listen(3000);
+```
