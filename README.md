@@ -3,6 +3,8 @@
 ## Introduction
 
 douh is node.js server framework.
+super slow and heavy. but want to be fast and light.
+contribute always welcome.
 
 <hr/>
 
