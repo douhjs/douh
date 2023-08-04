@@ -8,9 +8,17 @@ export async function bodyParser(req: DouhRequest, _: DouhResponse, next: NextFu
     const contentType = req.headers['content-type'];
 
     if (contentType === 'application/json') {
-      // call next after parsing body
-      const body = await readStringifiedRequestBody(req);
-      req.body = body;
+      const stringifiedBody = await readStringifiedRequestBody(req);
+      req.body = stringifiedBody ? JSON.parse(stringifiedBody) : {};
+      next();
+    }
+    if (contentType === 'application/x-www-form-urlencoded') {
+      const stringifiedBody = await readStringifiedRequestBody(req);
+      const params = new URLSearchParams(stringifiedBody);
+      req.body = {};
+      for (const [key, value] of params) {
+        req.body[key] = value;
+      }
       next();
     }
   } else {
@@ -18,6 +26,9 @@ export async function bodyParser(req: DouhRequest, _: DouhResponse, next: NextFu
   }
 }
 
+/**
+ * resolve stringified request body
+ */
 function readStringifiedRequestBody(req: DouhRequest) {
   return new Promise((resolve, reject) => {
     const buffers: Buffer[] = [];
@@ -28,12 +39,11 @@ function readStringifiedRequestBody(req: DouhRequest) {
 
     req.on('end', () => {
       const payload = Buffer.concat(buffers).toString();
-      const body = JSON.parse(payload);
-      resolve(body);
+      resolve(payload);
     });
 
     req.on('error', (error) => {
       reject(error);
     });
-  }) as Promise<Record<string, any>>;
+  }) as Promise<string>;
 }
