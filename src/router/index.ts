@@ -1,4 +1,4 @@
-import { DouhRequest, DouhResponse } from '../http';
+import * as http from 'http';
 import { Middleware, NextFunction } from '../application';
 import { notFound } from '../exceptions';
 
@@ -47,7 +47,7 @@ export class Router {
   }
 
   middleware() {
-    return async (req: DouhRequest, res: DouhResponse, next: NextFunction) => {
+    return async (req: http.IncomingMessage, res: http.ServerResponse, next: NextFunction) => {
       const { method, url } = req;
 
       const registeredRoute = this.routes
