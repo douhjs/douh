@@ -1,12 +1,12 @@
 {
   "name": "douh",
-  "version": "0.0.3-beta.1",
+  "version": "0.0.3-beta.2",
   "description": "http based node.js web server framework",
   "author": "changchanghwnag",
   "homepage": "https://github.com/douhjs/douh",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "rm -rf ./dist && npm run build:esm && npm run build:cjs",
     "build:cjs": "tsc --project tsconfig.build.json",
     "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json"
   },
@@ -46,7 +46,10 @@
     "http",
     "framework",
     "web",
-    "server"
+    "server",
+    "application",
+    "container",
+    "router"
   ],
   "files": [
     "dist",
