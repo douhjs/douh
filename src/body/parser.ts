@@ -1,9 +1,9 @@
-import { DouhRequest, DouhResponse } from '../http';
+import * as http from 'http';
 import { NextFunction } from '../application';
 
 const methodsContainedBody = new Set(['POST', 'PUT', 'PATCH']);
 
-export async function bodyParser(req: DouhRequest, _: DouhResponse, next: NextFunction) {
+export async function bodyParser(req: http.IncomingMessage, _: http.ServerResponse, next: NextFunction) {
   if (req.method && methodsContainedBody.has(req.method)) {
     const contentType = req.headers['content-type'];
 
@@ -29,7 +29,7 @@ export async function bodyParser(req: DouhRequest, _: DouhResponse, next: NextFu
 /**
  * resolve stringified request body
  */
-function readStringifiedRequestBody(req: DouhRequest) {
+function readStringifiedRequestBody(req: http.IncomingMessage) {
   return new Promise((resolve, reject) => {
     const buffers: Buffer[] = [];
 
