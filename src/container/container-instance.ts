@@ -18,32 +18,24 @@ class Container {
 
   private repositoryMetadataMap: Map<string, Metadata> = new Map();
 
-  public setService(options: MetadataOption) {
+  public set(options: MetadataOption) {
     const newMetadata: Metadata = {
       ...options,
     };
+    const metadataMap = newMetadata.type === 'service' ? this.serviceMetadataMap : this.repositoryMetadataMap;
 
-    const existingMetadata = this.serviceMetadataMap.get(newMetadata.id);
+    const existingMetadata = metadataMap.get(newMetadata.id);
 
     if (existingMetadata) {
       Object.assign(existingMetadata, newMetadata);
-    } else if (newMetadata.type === 'service') {
-      this.serviceMetadataMap.set(newMetadata.id, newMetadata);
+    } else {
+      metadataMap.set(newMetadata.id, newMetadata);
     }
   }
 
-  public setRepository(options: MetadataOption) {
-    const newMetadata: Metadata = {
-      ...options,
-    };
-
-    const existingMetadata = this.repositoryMetadataMap.get(newMetadata.id);
-
-    if (existingMetadata) {
-      Object.assign(existingMetadata, newMetadata);
-    } else if (newMetadata.type === 'repository') {
-      this.repositoryMetadataMap.set(newMetadata.id, newMetadata);
-    }
+  public reset() {
+    this.serviceMetadataMap.clear();
+    this.repositoryMetadataMap.clear();
   }
 
   public getInstance(type: 'service' | 'repository') {

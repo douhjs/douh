@@ -3,7 +3,7 @@ import { EMPTY_VALUE } from '../symbol';
 
 export function Service(): ClassDecorator {
   return (constructor: any) => {
-    containerInstance.setService({
+    containerInstance.set({
       id: constructor.name,
       Class: constructor as ClassType,
       type: 'service',

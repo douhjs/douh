@@ -3,7 +3,7 @@ import { EMPTY_VALUE } from '../symbol';
 
 export function Repository() {
   return (constructor: any) => {
-    containerInstance.setRepository({
+    containerInstance.set({
       id: constructor.name,
       Class: constructor as ClassType,
       type: 'repository',
