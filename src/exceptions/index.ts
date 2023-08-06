@@ -134,7 +134,3 @@ export function unavailableForLegalReasons(message?: string, data?: { errorMessa
 export function notImplemented(message?: string, data?: { errorMessage?: string }) {
   return new Exception(501, message ?? 'Not Implemented', data);
 }
-
-export function notInjected(message?: string, data?: { errorMessage?: string }) {
-  return new Exception(500, message ?? 'Not Injected', data);
-}

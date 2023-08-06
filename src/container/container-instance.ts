@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { EMPTY_VALUE } from '../symbol';
-import { notInjected } from '../exceptions';
 
 type MetadataType = 'service' | 'repository';
 
@@ -65,17 +64,20 @@ class Container {
   private initializeParams<T>(target: ClassType<T>, paramTypes: any[]): unknown[] {
     const res = [];
     for (const Param of paramTypes) {
-      const metadata = this.repositoryMetadataMap.get(Param.name);
-      if (metadata) {
-        res.push(new Param());
-      } else {
-        throw notInjected(`${Param.name} is not injected. please use @Repository() decorator`, {
-          errorMessage: 'Unexpected Error Occurred.',
-        });
+      if (this.isPrimitive(Param.name)) {
+        const metadata = this.repositoryMetadataMap.get(Param.name);
+        if (metadata) {
+          res.push(new Param());
+        }
       }
     }
 
     return res;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private isPrimitive(type: string) {
+    return ['string', 'boolean', 'number', 'object'].includes(type.toLowerCase());
   }
 }
 export const containerInstance = new Container();
