@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as onFinished from 'on-finished';
 import { Exception } from '../exceptions';
+import { containerInstance } from '../container';
 
 // supply async await next() function
 export type NextFunction = () => Promise<any>;
@@ -53,6 +54,7 @@ export class Application {
   callback() {
     const fn = this.compose(this.middleware);
     const requestHandler = (req: http.IncomingMessage, res: http.ServerResponse) => {
+      req.services = containerInstance.getServiceInstances();
       return this.handleRequest(req, res, fn);
     };
     return requestHandler;
