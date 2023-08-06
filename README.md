@@ -64,7 +64,7 @@ app.listen(3000);
 ### Use Service
 
 you can use service with `@Service` decorator.
-access service with `req.services`.
+access service with `req.service`.
 
 ```typescript
 import App, { Service } from 'douh';
@@ -78,7 +78,7 @@ class DouhService {
 
 const app = new App();
 app.use(async (req, res) => {
-  const result = req.services.userService.hello('douh');
+  const result = req.service.userService.hello('douh');
   return result; // hello douh
 });
 ```

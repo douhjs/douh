@@ -54,7 +54,7 @@ export class Application {
   callback() {
     const fn = this.compose(this.middleware);
     const requestHandler = (req: http.IncomingMessage, res: http.ServerResponse) => {
-      req.services = containerInstance.getServiceInstances();
+      req.service = containerInstance.getInstance('service');
       return this.handleRequest(req, res, fn);
     };
     return requestHandler;

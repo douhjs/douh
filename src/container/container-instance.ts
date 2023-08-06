@@ -46,14 +46,15 @@ class Container {
     }
   }
 
-  public getServiceInstances() {
-    const services: Record<string, any> = {};
-    this.serviceMetadataMap.forEach((value, key) => {
+  public getInstance(type: 'service' | 'repository') {
+    const instances: Record<string, any> = {};
+
+    (type === 'service' ? this.serviceMetadataMap : this.repositoryMetadataMap).forEach((value, key) => {
       const name = key[0].toLowerCase() + key.slice(1);
-      const service = this.getValue(value);
-      services[name] = service;
+      const instance = this.getValue(value);
+      instances[name] = instance;
     });
-    return services;
+    return instances;
   }
 
   private getValue(metaData: Metadata) {

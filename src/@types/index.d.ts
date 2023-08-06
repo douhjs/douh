@@ -3,7 +3,7 @@ declare module 'http' {
     body?: Record<string, any>;
     query: Record<string, any>;
     params: Record<string, any>;
-    services: Record<string, any>;
+    service: Record<string, any>;
   }
 
   interface ServerResponse {
