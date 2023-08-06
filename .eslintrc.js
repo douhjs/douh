@@ -30,7 +30,7 @@ module.exports = {
     'no-useless-constructor': 'off',
     'max-classes-per-file': 'off',
     'no-shadow': 'off',
-    'no-plusplus':'off',
+    'no-plusplus': 'off',
     'prettier/prettier': 'error',
     'no-param-reassign': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.spec.*', '**/*.test.*'] }],
@@ -42,5 +42,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'no-restricted-syntax': ['error', 'WithStatement'],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-empty-function': 'off',
   },
 };
