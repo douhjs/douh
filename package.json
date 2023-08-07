@@ -6,6 +6,7 @@
   "homepage": "https://github.com/douhjs/douh",
   "scripts": {
     "test": "jest",
+    "lint": "eslint .",
     "build": "rm -rf ./dist && npm run build:esm && npm run build:cjs",
     "build:cjs": "tsc --project tsconfig.build.json",
     "build:esm": "tsc --module esnext --outDir dist/esm --project tsconfig.build.json"
