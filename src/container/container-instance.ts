@@ -54,8 +54,6 @@ class Container {
     const paramTypes = Reflect.getMetadata('design:paramtypes', Class) || [];
     const params = this.initializeParams(Class, paramTypes);
 
-    params.push(this);
-
     value = new Class(...params);
 
     return value;
@@ -64,11 +62,14 @@ class Container {
   private initializeParams<T>(target: ClassType<T>, paramTypes: any[]): unknown[] {
     const res = [];
     for (const Param of paramTypes) {
-      if (this.isPrimitive(Param.name)) {
+      if (!this.isPrimitive(Param.name)) {
         const metadata = this.repositoryMetadataMap.get(Param.name);
         if (metadata) {
           res.push(new Param());
         }
+      } else {
+        // TODO: primitive type isn't supported inject by container now.
+        res.push(undefined);
       }
     }
 

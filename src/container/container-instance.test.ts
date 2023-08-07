@@ -1,4 +1,4 @@
-import { Service } from '../decorators';
+import { Repository, Service } from '../decorators';
 import { EMPTY_VALUE } from '../symbol';
 import { containerInstance } from './container-instance';
 
@@ -89,16 +89,21 @@ describe('Container', () => {
   });
   describe('reset', () => {
     it('should support container reset', () => {
+      @Repository()
+      class TestRepository {}
+
       @Service()
       class TestService {
         constructor(
           public name: string = 'douh',
+          private testRepository: TestRepository,
           public age: number = 20,
         ) {}
       }
 
       expect(containerInstance.getInstance('service').testService).toBeInstanceOf(TestService);
       expect(containerInstance.getInstance('service').testService.name).toBe('douh');
+      expect(containerInstance.getInstance('service').testService.testRepository).toBeInstanceOf(TestRepository);
       expect(containerInstance.getInstance('service').testService.age).toBe(20);
       containerInstance.reset();
       expect(containerInstance.getInstance('service').testService).toBeUndefined();
