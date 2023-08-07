@@ -68,7 +68,7 @@ describe('Container', () => {
         });
       });
 
-      it('service', () => {
+      it('repository', () => {
         containerInstance.set({
           id: 'TestService',
           Class: class TestService {},
