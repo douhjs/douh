@@ -44,5 +44,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'no-restricted-syntax': ['error', 'WithStatement'],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-empty-function': 'off',
   },
 };

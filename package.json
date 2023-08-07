@@ -1,6 +1,6 @@
 {
   "name": "douh",
-  "version": "0.0.3-beta.2",
+  "version": "0.1.0",
   "description": "http based node.js web server framework",
   "author": "changchanghwnag",
   "homepage": "https://github.com/douhjs/douh",
@@ -16,7 +16,8 @@
   "esm": "./dist/esm/index.js",
   "license": "MIT",
   "dependencies": {
-    "on-finished": "^2.4.1"
+    "on-finished": "^2.4.1",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
