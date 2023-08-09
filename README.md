@@ -61,6 +61,28 @@ app.use(router.middleware());
 app.listen(3000);
 ```
 
+### bodyParser
+
+you can use `bodyParser` middleware.
+
+```typescript
+import App, { bodyParser, Router } from 'douh';
+
+const app = new App();
+const router = new Router();
+
+router.post('/ping', (req, res, next) => {
+  console.log(req.body);
+  console.log(req.files); // when content type is multipart/form-data
+  return 'pong';
+});
+
+app.use(bodyParser);
+app.use(router.middleware());
+
+app.listen(3000);
+```
+
 ### Use Service
 
 you can use service with `@Service` decorator.
