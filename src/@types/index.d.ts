@@ -4,6 +4,7 @@ declare module 'http' {
     query: Record<string, any>;
     params: Record<string, any>;
     service: Record<string, any>;
+    files: RequestFiles;
   }
 
   interface ServerResponse {
@@ -12,3 +13,11 @@ declare module 'http' {
 }
 
 type ClassType<T = unknown> = new (...args: any[]) => T;
+
+type RequestFiles = {
+  [key: string]: {
+    fieldName: string;
+    fileName: string;
+    fileContent: string;
+  }[];
+};
