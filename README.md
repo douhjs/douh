@@ -129,7 +129,7 @@ class DouhService {
 
 const app = new App();
 app.use(async (req, res) => {
-  const result = req.services.douhService.hello('douh');
+  const result = req.service.douhService.hello('douh');
   return result; // hello douh
 });
 ```
