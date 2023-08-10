@@ -1,6 +1,6 @@
 {
   "name": "douh",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "http based node.js web server framework",
   "author": "changchanghwnag",
   "homepage": "https://github.com/douhjs/douh",
@@ -51,7 +51,8 @@
     "server",
     "application",
     "container",
-    "router"
+    "router",
+    "douh"
   ],
   "files": [
     "dist",

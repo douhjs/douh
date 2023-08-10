@@ -4,7 +4,7 @@
 
 douh is node.js server framework.
 super slow and heavy. but want to be fast and light.
-contribute always welcome.
+Contributions are always welcome!
 
 <hr/>
 
@@ -56,6 +56,28 @@ router.get('/ping', (req, res, next) => {
   return 'pong';
 });
 
+app.use(router.middleware());
+
+app.listen(3000);
+```
+
+### bodyParser
+
+you can use `bodyParser` middleware.
+
+```typescript
+import App, { bodyParser, Router } from 'douh';
+
+const app = new App();
+const router = new Router();
+
+router.post('/ping', (req, res, next) => {
+  console.log(req.body);
+  console.log(req.files); // when content type is multipart/form-data
+  return 'pong';
+});
+
+app.use(bodyParser);
 app.use(router.middleware());
 
 app.listen(3000);

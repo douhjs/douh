@@ -43,7 +43,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
     'no-restricted-syntax': ['error', 'WithStatement'],
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'no-empty-function': 'off',
   },
 };

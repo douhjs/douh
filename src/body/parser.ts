@@ -21,9 +21,22 @@ export async function bodyParser(req: http.IncomingMessage, _: http.ServerRespon
       }
       next();
     }
+    if (contentType && contentType.startsWith('multipart/form-data')) {
+      const boundary = extractBoundary(contentType);
+      const { formDataBody, formDataFiles } = await parseMultipartFormData(req, boundary);
+      req.body = formDataBody;
+      req.files = formDataFiles;
+      next();
+    }
   } else {
     next();
   }
+}
+
+function extractBoundary(contentType: string): string {
+  const boundaryPattern = /boundary=(?:"([^"]+)"|([^;]+))/i;
+  const match = contentType.match(boundaryPattern);
+  return match ? match[1] || match[2] : '';
 }
 
 /**
@@ -46,4 +59,64 @@ function readStringifiedRequestBody(req: http.IncomingMessage) {
       reject(error);
     });
   }) as Promise<string>;
+}
+
+/**
+ * resolve multipart formData
+ */
+function parseMultipartFormData(
+  req: http.IncomingMessage,
+  boundary: string,
+): Promise<{ formDataBody: Record<string, string>; formDataFiles: RequestFiles }> {
+  return new Promise((resolve, reject) => {
+    const formDataBody: Record<string, string> = {};
+    const formDataFiles: RequestFiles = {} as RequestFiles;
+    const buffers: Buffer[] = [];
+    let currentFieldName = '';
+
+    req.on('data', (chunk: Buffer) => {
+      buffers.push(chunk);
+    });
+
+    req.on('end', () => {
+      const payload = Buffer.concat(buffers);
+      const parts = payload.toString().split(`--${boundary}`);
+
+      for (const part of parts) {
+        const [headers, body] = part.split('\r\n\r\n');
+        const contentDisposition = headers.match(/Content-Disposition:.*name="([^"]+)"/i);
+
+        if (contentDisposition) {
+          const [_, name] = contentDisposition[0].match(/name="([^"]+)"/)!;
+          const fileInfo = contentDisposition[0].match(/filename="([^"]+)"/);
+          if (fileInfo) {
+            if (formDataFiles[name]) {
+              formDataFiles[name].push({
+                fieldName: name,
+                fileName: fileInfo[1],
+                fileContent: body,
+              });
+            } else {
+              formDataFiles[name] = [
+                {
+                  fieldName: name,
+                  fileName: fileInfo[1],
+                  fileContent: body,
+                },
+              ];
+            }
+          } else {
+            currentFieldName = name;
+            formDataBody[currentFieldName] = body.trim();
+          }
+        }
+      }
+
+      resolve({ formDataBody, formDataFiles });
+    });
+
+    req.on('error', (error) => {
+      reject(error);
+    });
+  });
 }
