@@ -25,7 +25,7 @@ function getContentType(filePath: string): string {
 
 export function serveStatic(baseRoute: string) {
   return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
-    let filePath = path.join(__dirname, '..', baseRoute, req.url!);
+    let filePath = path.join(process.cwd(), baseRoute, req.url!);
     const exist = fs.existsSync(filePath);
     if (!exist) {
       return next();
