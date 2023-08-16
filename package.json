@@ -1,6 +1,6 @@
 {
   "name": "douh",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "http based node.js web server framework",
   "author": "changchanghwnag",
   "homepage": "https://github.com/douhjs/douh",
