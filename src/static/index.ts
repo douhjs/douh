@@ -30,10 +30,14 @@ export function serveStatic(baseRoute: string) {
     if (!exist) {
       return next();
     }
-    let stat = fs.statSync(filePath);
+    const stat = fs.statSync(filePath);
     if (stat.isDirectory()) {
       filePath = path.join(filePath, 'index.html');
-      stat = await asyncFs.stat(filePath);
+
+      const exist = fs.existsSync(filePath);
+      if (!exist) {
+        return next();
+      }
     }
 
     const data = await asyncFs.readFile(filePath);
