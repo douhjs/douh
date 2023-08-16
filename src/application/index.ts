@@ -73,11 +73,13 @@ export class Application {
 
   // eslint-disable-next-line class-methods-use-this
   private response(_: http.IncomingMessage, res: http.ServerResponse) {
-    if (primitiveType.has(typeof res.body)) {
-      res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
+    if (res.getHeaders()['content-type']) {
+      res.end(res.body);
+    } else if (primitiveType.has(typeof res.body)) {
+      res.setHeader('Content-Type', 'text/plain');
       res.end(res.body);
     } else {
-      res.writeHead(res.statusCode, { 'Content-Type': 'application/json' });
+      res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(res.body));
     }
   }

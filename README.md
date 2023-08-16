@@ -133,3 +133,18 @@ app.use(async (req, res) => {
   return result; // hello douh
 });
 ```
+
+### Use File Service
+
+you can use file service with middleware.
+
+```typescript
+import App, { serveStatic } from 'douh';
+
+const app = new App();
+
+app.use(serveStatic('public')); // it must be placed before bodyParser
+app.use(bodyParser);
+
+app.listen(3000);
+```
